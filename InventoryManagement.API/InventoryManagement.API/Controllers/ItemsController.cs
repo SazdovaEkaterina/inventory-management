@@ -28,7 +28,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ItemDto>>> GetItems(
+    public async Task<ActionResult<IEnumerable<ItemDto>>> GetAll(
         [FromQuery] string? name,
         [FromQuery] int? categoryId,
         [FromQuery] int? toQuantity,
@@ -56,7 +56,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetItem")]
-    public async Task<ActionResult<ItemDto>> GetItem(
+    public async Task<ActionResult<ItemDto>> Get(
         [FromRoute] int id)
     {
         var item = await _inventoryManagementRepository.GetItemAsync(id);
@@ -67,11 +67,12 @@ public class ItemsController : ControllerBase
         }
 
         var itemDto = _mapper.Map<ItemDto>(item);
+        
         return Ok(itemDto);
     }
 
     [HttpPost("add")]
-    public async Task<ActionResult<ItemDto>> CreateItem(
+    public async Task<ActionResult<ItemDto>> Create(
         [FromBody] ItemDto itemDto)
     {
         var item = _mapper.Map<Item>(itemDto);
@@ -88,7 +89,7 @@ public class ItemsController : ControllerBase
     }
     
     [HttpPut("{id}/edit")]
-    public async Task<ActionResult> UpdateItem(
+    public async Task<ActionResult> Update(
         [FromRoute] int id, 
         [FromBody] ItemDto itemDto)
     {
@@ -106,7 +107,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpPatch("{id}/partial-edit")]
-    public async Task<ActionResult> PartiallyUpdateItem(
+    public async Task<ActionResult> PartiallyUpdate(
         [FromRoute] int id, 
         [FromBody] JsonPatchDocument<ItemDto> patchDocument)
     {
@@ -139,7 +140,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpDelete("{id}/delete")]
-    public async Task<ActionResult> HardDeleteItem(
+    public async Task<ActionResult> HardDelete(
         [FromRoute] int id)
     {
         var item = await _inventoryManagementRepository.GetItemAsync(id);
@@ -156,7 +157,7 @@ public class ItemsController : ControllerBase
     }
     
     [HttpPost("{id}/delete")]
-    public async Task<ActionResult> SoftDeleteItem(
+    public async Task<ActionResult> SoftDelete(
         [FromRoute] int id)
     {
         var item = await _inventoryManagementRepository.GetItemAsync(id);

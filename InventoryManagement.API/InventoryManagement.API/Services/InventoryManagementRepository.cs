@@ -25,14 +25,15 @@ public class InventoryManagementRepository : IInventoryManagementRepository
     {
         var totalItems = _context.Items
             .Where(item => !item.IsDeleted
-                        && item.Quantity >= fromQuantity
                         && item.Price >= fromPrice)
+            .Include(item => item.Products)
+            .Where(item => item.Products.Count >= fromQuantity)
             .Include(item => item.Category)
             as IQueryable<Item>;
-
+        
         if (toQuantity != null)
         {
-            totalItems = totalItems.Where(item => item.Quantity <= toQuantity);
+            totalItems = totalItems.Where(item => item.Products.Count <= toQuantity);
         }
 
         if (toPrice != null)
@@ -68,25 +69,95 @@ public class InventoryManagementRepository : IInventoryManagementRepository
     {
         return await _context.Items
             .Where(item => item.Id == id && !item.IsDeleted)
+            .Include(item => item.Products)
             .FirstOrDefaultAsync();
     }
 
+    public async Task<bool> ItemExistsAsync(int id)
+    {
+        return await _context.Items.AnyAsync(item => item.Id == id);
+    }
+    
     public void AddItem(Item item)
     {
         _context.Items.Add(item);
     }
 
-    public void DeleteItem(Item item)
-    {
+    public async Task DeleteItem(Item item)
+    {        
+        var products = await _context.Products
+            .Where(product => product.Item == item)
+            .ToListAsync();
+
+        foreach (var product in products)
+        {
+            this.DeleteProduct(product);
+        }
+        
         _context.Items.Remove(item);
     }
 
-    public void MarkItemAsDeleted(Item item)
+    public async Task MarkItemAsDeleted(Item item)
     {
+        var products = await _context.Products
+            .Where(product => product.Item == item)
+            .ToListAsync();
+
+        foreach (var product in products)
+        {
+            this.MarkProductAsDeleted(product);
+        }
+        
         item.IsDeleted = true;
     }
 
-    
+    public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(int itemId, string? serialNumber, int pageNumber, int pageSize)
+    {
+        var totalProducts = _context.Products
+                .Where(product => product.ItemId == itemId && !product.IsDeleted)
+            as IQueryable<Product>;
+        
+        if (!string.IsNullOrWhiteSpace(serialNumber))
+        {
+            serialNumber = serialNumber.Trim().ToLower();
+            totalProducts = totalProducts.Where(product =>
+                product.SerialNumber.ToLower().Contains(serialNumber));
+        }
+
+        var totalProductCount = await totalProducts.CountAsync();
+        var paginationMetadata = new PaginationMetadata(totalProductCount, pageSize, pageNumber);
+        
+        var products = await totalProducts
+            .OrderBy(product => product.SerialNumber)
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (products, paginationMetadata);
+    }
+
+    public async Task<Product?> GetProductAsync(int id)
+    {
+        return await _context.Products
+            .Where(product => product.Id == id)
+            .FirstOrDefaultAsync();
+    }
+
+    public void AddProduct(Product product)
+    {
+        _context.Products.Add(product);
+    }
+
+    public void DeleteProduct(Product product)
+    {
+        _context.Products.Remove(product);
+    }
+
+    public void MarkProductAsDeleted(Product product)
+    {
+        product.IsDeleted = true;
+    }
+
     public async Task<IEnumerable<Category>> GetCategoriesAsync()
     {
         return await _context.Categories
@@ -124,7 +195,7 @@ public class InventoryManagementRepository : IInventoryManagementRepository
 
         foreach (var item in items)
         {
-            _context.Remove(item);
+            await this.DeleteItem(item);
         }
         
         _context.Remove(category);
@@ -138,9 +209,10 @@ public class InventoryManagementRepository : IInventoryManagementRepository
 
         foreach (var item in items)
         {
-            item.IsDeleted = true;
+            await this.MarkItemAsDeleted(item);
         }
 
         category.IsDeleted = true;
     }
+
 }

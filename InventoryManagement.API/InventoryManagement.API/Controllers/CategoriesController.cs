@@ -26,7 +26,7 @@ public class CategoriesController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories()
+    public async Task<ActionResult<IEnumerable<CategoryDto>>> GetAll()
     {
         var categoryList = await _inventoryManagementRepository.GetCategoriesAsync();
         var categoryDtoList = _mapper.Map<IEnumerable<CategoryDto>>(categoryList);
@@ -34,7 +34,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetCategory")]
-    public async Task<ActionResult<CategoryDto>> GetCategory(
+    public async Task<ActionResult<CategoryDto>> Get(
         [FromRoute] int id)
     {
         var category = await _inventoryManagementRepository.GetCategoryAsync(id);
@@ -49,7 +49,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet("{id}/items")]
-    public async Task<ActionResult<IEnumerable<ItemDto>>> GetCategoryItems(
+    public async Task<ActionResult<IEnumerable<ItemDto>>> GetItems(
         [FromRoute] int id)
     {
         var category = await _inventoryManagementRepository.GetCategoryAsync(id);
@@ -65,7 +65,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost("add")]
-    public async Task<ActionResult<CategoryDto>> CreateCategory(
+    public async Task<ActionResult<CategoryDto>> Create(
         [FromBody] CategoryDto categoryDto)
     {
         var category = _mapper.Map<Category>(categoryDto);
@@ -82,7 +82,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPut("{id}/edit")]
-    public async Task<ActionResult> UpdateCategory(
+    public async Task<ActionResult> Update(
         [FromRoute] int id, 
         [FromBody] CategoryDto categoryDto)
     {
@@ -100,7 +100,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPatch("{id}/partial-edit")]
-    public async Task<ActionResult> PartiallyUpdateCategory(
+    public async Task<ActionResult> PartiallyUpdate(
         [FromRoute] int id, 
         [FromBody] JsonPatchDocument<CategoryDto> patchDocument)
     {
@@ -133,7 +133,7 @@ public class CategoriesController : ControllerBase
     }
     
     [HttpDelete("{id}/delete")]
-    public async Task<ActionResult> HardDeleteCategory(
+    public async Task<ActionResult> HardDelete(
         [FromRoute] int id)
     {
         var category = await _inventoryManagementRepository.GetCategoryAsync(id);
@@ -150,7 +150,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost("{id}/delete")]
-    public async Task<ActionResult> SoftDeleteCategory(
+    public async Task<ActionResult> SoftDelete(
         [FromRoute] int id)
     {
         var category = await _inventoryManagementRepository.GetCategoryAsync(id);

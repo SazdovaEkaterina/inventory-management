@@ -3,6 +3,7 @@ using System;
 using InventoryManagement.API.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InventoryManagement.API.Migrations
 {
     [DbContext(typeof(InventoryContext))]
-    partial class InventoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230801073440_SoftDeleteItemInstance")]
+    partial class SoftDeleteItemInstance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -132,7 +135,7 @@ namespace InventoryManagement.API.Migrations
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("InventoryManagement.API.Models.Entities.Product", b =>
+            modelBuilder.Entity("InventoryManagement.API.Models.Entities.ItemInstance", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -140,7 +143,7 @@ namespace InventoryManagement.API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("InventoryManagementUserId")
+                    b.Property<string>("HolderId")
                         .HasColumnType("text");
 
                     b.Property<bool>("IsDeleted")
@@ -156,11 +159,11 @@ namespace InventoryManagement.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InventoryManagementUserId");
+                    b.HasIndex("HolderId");
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("Products");
+                    b.ToTable("ItemInstance");
                 });
 
             modelBuilder.Entity("InventoryManagement.API.Models.Entities.Item", b =>
@@ -174,19 +177,19 @@ namespace InventoryManagement.API.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("InventoryManagement.API.Models.Entities.Product", b =>
+            modelBuilder.Entity("InventoryManagement.API.Models.Entities.ItemInstance", b =>
                 {
-                    b.HasOne("InventoryManagement.API.Models.Entities.InventoryManagementUser", "InventoryManagementUser")
+                    b.HasOne("InventoryManagement.API.Models.Entities.InventoryManagementUser", "Holder")
                         .WithMany()
-                        .HasForeignKey("InventoryManagementUserId");
+                        .HasForeignKey("HolderId");
 
                     b.HasOne("InventoryManagement.API.Models.Entities.Item", "Item")
-                        .WithMany("Products")
+                        .WithMany("Instances")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("InventoryManagementUser");
+                    b.Navigation("Holder");
 
                     b.Navigation("Item");
                 });
@@ -198,7 +201,7 @@ namespace InventoryManagement.API.Migrations
 
             modelBuilder.Entity("InventoryManagement.API.Models.Entities.Item", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("Instances");
                 });
 #pragma warning restore 612, 618
         }

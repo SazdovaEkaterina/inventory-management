@@ -3,6 +3,7 @@ using System;
 using InventoryManagement.API.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InventoryManagement.API.Migrations
 {
     [DbContext(typeof(InventoryContext))]
-    partial class InventoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230801083920_RenameToProducts")]
+    partial class RenameToProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,7 +143,7 @@ namespace InventoryManagement.API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("InventoryManagementUserId")
+                    b.Property<string>("HolderId")
                         .HasColumnType("text");
 
                     b.Property<bool>("IsDeleted")
@@ -156,7 +159,7 @@ namespace InventoryManagement.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InventoryManagementUserId");
+                    b.HasIndex("HolderId");
 
                     b.HasIndex("ItemId");
 
@@ -176,9 +179,9 @@ namespace InventoryManagement.API.Migrations
 
             modelBuilder.Entity("InventoryManagement.API.Models.Entities.Product", b =>
                 {
-                    b.HasOne("InventoryManagement.API.Models.Entities.InventoryManagementUser", "InventoryManagementUser")
+                    b.HasOne("InventoryManagement.API.Models.Entities.InventoryManagementUser", "Holder")
                         .WithMany()
-                        .HasForeignKey("InventoryManagementUserId");
+                        .HasForeignKey("HolderId");
 
                     b.HasOne("InventoryManagement.API.Models.Entities.Item", "Item")
                         .WithMany("Products")
@@ -186,7 +189,7 @@ namespace InventoryManagement.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("InventoryManagementUser");
+                    b.Navigation("Holder");
 
                     b.Navigation("Item");
                 });
