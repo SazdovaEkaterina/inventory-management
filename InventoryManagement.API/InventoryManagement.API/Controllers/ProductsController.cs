@@ -16,7 +16,7 @@ public class ProductsController : ControllerBase
 {
     private readonly IInventoryManagementRepository _inventoryManagementRepository;
     private readonly IMapper _mapper;
-    private const int MaxItemsPageSize = 10;
+    private const int MaxProductsPageSize = 10;
 
     public ProductsController(IInventoryManagementRepository inventoryManagementRepository, IMapper mapper)
     {
@@ -37,9 +37,9 @@ public class ProductsController : ControllerBase
             return NotFound();
         }
         
-        if (pageSize > MaxItemsPageSize)
+        if (pageSize > MaxProductsPageSize)
         {
-            pageSize = MaxItemsPageSize;
+            pageSize = MaxProductsPageSize;
         }
         
         var (productList, paginationMetadata) = 
