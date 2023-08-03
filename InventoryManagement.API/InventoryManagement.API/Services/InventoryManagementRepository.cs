@@ -137,7 +137,37 @@ public class InventoryManagementRepository : IInventoryManagementRepository
         return (products, paginationMetadata);
     }
 
-    public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(int itemId, string? serialNumber, int pageNumber, int pageSize)
+    public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(string? serialNumber, int pageNumber, int pageSize, bool filterByAvailability)
+    {
+        var totalProducts = _context.Products
+                .Include(product => product.Item)
+            as IQueryable<Product>;
+
+        if (filterByAvailability)
+        {
+            totalProducts = totalProducts.Where(product => product.UserId == null);
+        }
+        
+        if (!string.IsNullOrWhiteSpace(serialNumber))
+        {
+            serialNumber = serialNumber.Trim().ToLower();
+            totalProducts = totalProducts.Where(product =>
+                product.SerialNumber.ToLower().Contains(serialNumber));
+        }
+        
+        var totalProductCount = await totalProducts.CountAsync();
+        var paginationMetadata = new PaginationMetadata(totalProductCount, pageSize, pageNumber);
+        
+        var products = await totalProducts
+            .OrderBy(product => product.ItemId).ThenBy(product => product.SerialNumber)
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (products, paginationMetadata);
+    }
+
+    public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsForItemAsync(int itemId, string? serialNumber, int pageNumber, int pageSize)
     {
         var totalProducts = _context.Products
                 .Where(product => product.ItemId == itemId && !product.IsDeleted)

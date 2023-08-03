@@ -16,8 +16,9 @@ public interface IInventoryManagementRepository
     Task MarkItemAsDeleted(Item item);
     
     Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsForUserAsync(string userId, string? serialNumber, int pageNumber, int pageSize);
+    Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(string? serialNumber, int pageNumber, int pageSize, bool filterByAvailability);
     
-    Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(int itemId, string? serialNumber, int pageNumber, int pageSize);
+    Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsForItemAsync(int itemId, string? serialNumber, int pageNumber, int pageSize);
     Task<Product?> GetProductAsync(int id);
     void AddProduct(Product product);
     void DeleteProduct(Product product);

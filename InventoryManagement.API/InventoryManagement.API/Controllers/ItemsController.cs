@@ -16,7 +16,7 @@ public class ItemsController : ControllerBase
 {
     private readonly IInventoryManagementRepository _inventoryManagementRepository;
     private readonly IMapper _mapper;
-    private const int MaxItemsPageSize = 20;
+    private const int MaxItemsPageSize = 10;
     
     public ItemsController(
         IInventoryManagementRepository inventoryManagementRepository,

@@ -4,6 +4,6 @@ public class ProductDto
 {
     public string SerialNumber { get; set; }
     public int ItemId { get; set; }
-    public string? InventoryManagementUserId { get; set; }
+    public string? UserId { get; set; }
     public bool IsDeleted { get; set; }
 }
