@@ -36,6 +36,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
         options.User.RequireUniqueEmail = true;
     })
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<InventoryContext>()
     .AddDefaultTokenProviders(); 
 

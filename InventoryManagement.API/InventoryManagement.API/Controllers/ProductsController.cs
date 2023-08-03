@@ -150,11 +150,7 @@ public class ProductsController : ControllerBase
         await _inventoryManagementRepository.SaveChangesAsync();
 
         return CreatedAtRoute("GetProduct",
-            new
-            {
-                itemId = itemId,
-                id = product.Id
-            },
+            (itemId, id: product.Id),
             _mapper.Map<ProductDto>(product));
     }
 

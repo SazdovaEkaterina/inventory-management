@@ -11,7 +11,6 @@ namespace InventoryManagement.API.Controllers;
 
 [ApiController]
 [Authorize(AuthenticationSchemes = "Bearer")]
-[Route("api/items")]
 public class ItemsController : ControllerBase
 {
     private readonly IInventoryManagementRepository _inventoryManagementRepository;
@@ -27,7 +26,7 @@ public class ItemsController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet]
+    [HttpGet("api/items")]
     public async Task<ActionResult<IEnumerable<ItemDto>>> GetAll(
         [FromQuery] string? name,
         [FromQuery] int? categoryId,
@@ -55,7 +54,7 @@ public class ItemsController : ControllerBase
         return Ok(itemDtoList);
     }
 
-    [HttpGet("{id}", Name = "GetItem")]
+    [HttpGet("api/items/{id}", Name = "GetItem")]
     public async Task<ActionResult<ItemDto>> Get(
         [FromRoute] int id)
     {
@@ -71,7 +70,7 @@ public class ItemsController : ControllerBase
         return Ok(itemDto);
     }
 
-    [HttpPost("add")]
+    [HttpPost("api/items/add")]
     public async Task<ActionResult<ItemDto>> Create(
         [FromBody] ItemDto itemDto)
     {
@@ -88,7 +87,7 @@ public class ItemsController : ControllerBase
             _mapper.Map<ItemDto>(item));
     }
     
-    [HttpPut("{id}/edit")]
+    [HttpPut("api/items/{id}/edit")]
     public async Task<ActionResult> Update(
         [FromRoute] int id, 
         [FromBody] ItemDto itemDto)
@@ -106,7 +105,7 @@ public class ItemsController : ControllerBase
         return Ok(_mapper.Map<ItemDto>(item));
     }
 
-    [HttpPatch("{id}/partial-edit")]
+    [HttpPatch("api/items/{id}/partial-edit")]
     public async Task<ActionResult> PartiallyUpdate(
         [FromRoute] int id, 
         [FromBody] JsonPatchDocument<ItemDto> patchDocument)
@@ -139,7 +138,7 @@ public class ItemsController : ControllerBase
         return Ok(_mapper.Map<ItemDto>(item));
     }
 
-    [HttpDelete("{id}/delete")]
+    [HttpDelete("api/items/{id}/delete")]
     public async Task<ActionResult> HardDelete(
         [FromRoute] int id)
     {
@@ -150,13 +149,13 @@ public class ItemsController : ControllerBase
             return NotFound();
         }
         
-        _inventoryManagementRepository.DeleteItem(item);
+        await _inventoryManagementRepository.DeleteItem(item);
         await _inventoryManagementRepository.SaveChangesAsync();
 
         return NoContent();
     }
     
-    [HttpPost("{id}/delete")]
+    [HttpPost("api/items/{id}/delete")]
     public async Task<ActionResult> SoftDelete(
         [FromRoute] int id)
     {
@@ -167,7 +166,7 @@ public class ItemsController : ControllerBase
             return NotFound();
         }
         
-        _inventoryManagementRepository.MarkItemAsDeleted(item);
+        await _inventoryManagementRepository.MarkItemAsDeleted(item);
         await _inventoryManagementRepository.SaveChangesAsync();
 
         return NoContent();
