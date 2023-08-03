@@ -6,5 +6,4 @@ public class ItemDto
     public double Price { get; set; }
     public int Quantity { get; set; }
     public int CategoryId { get; set; }
-    public bool IsDeleted { get; set; }
 }

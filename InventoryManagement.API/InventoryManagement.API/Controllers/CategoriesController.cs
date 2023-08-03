@@ -10,7 +10,6 @@ namespace InventoryManagement.API.Controllers;
 
 [ApiController]
 [Authorize(AuthenticationSchemes = "Bearer")]
-[Route("api/categories")]
 public class CategoriesController : ControllerBase
 {
     private readonly IInventoryManagementRepository _inventoryManagementRepository;
@@ -25,7 +24,7 @@ public class CategoriesController : ControllerBase
         _mapper = mapper;
     }
     
-    [HttpGet]
+    [HttpGet("api/categories")]
     public async Task<ActionResult<IEnumerable<CategoryDto>>> GetAll()
     {
         var categoryList = await _inventoryManagementRepository.GetCategoriesAsync();
@@ -33,7 +32,7 @@ public class CategoriesController : ControllerBase
         return Ok(categoryDtoList);
     }
 
-    [HttpGet("{id}", Name = "GetCategory")]
+    [HttpGet("api/categories/{id}", Name = "GetCategory")]
     public async Task<ActionResult<CategoryDto>> Get(
         [FromRoute] int id)
     {
@@ -48,7 +47,7 @@ public class CategoriesController : ControllerBase
         return Ok(categoryDto);
     }
 
-    [HttpGet("{id}/items")]
+    [HttpGet("api/categories/{id}/items")]
     public async Task<ActionResult<IEnumerable<ItemDto>>> GetItems(
         [FromRoute] int id)
     {
@@ -65,7 +64,7 @@ public class CategoriesController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("add")]
+    [HttpPost("api/categories/add")]
     public async Task<ActionResult<CategoryDto>> Create(
         [FromBody] CategoryDto categoryDto)
     {
@@ -83,7 +82,7 @@ public class CategoriesController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPut("{id}/edit")]
+    [HttpPut("api/categories/{id}/edit")]
     public async Task<ActionResult> Update(
         [FromRoute] int id, 
         [FromBody] CategoryDto categoryDto)
@@ -102,7 +101,7 @@ public class CategoriesController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPatch("{id}/partial-edit")]
+    [HttpPatch("api/categories/{id}/partial-edit")]
     public async Task<ActionResult> PartiallyUpdate(
         [FromRoute] int id, 
         [FromBody] JsonPatchDocument<CategoryDto> patchDocument)
@@ -136,7 +135,7 @@ public class CategoriesController : ControllerBase
     }
     
     [Authorize(Roles = "Admin")]
-    [HttpDelete("{id}/delete")]
+    [HttpDelete("api/categories/{id}/delete")]
     public async Task<ActionResult> HardDelete(
         [FromRoute] int id)
     {
@@ -154,7 +153,7 @@ public class CategoriesController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("{id}/delete")]
+    [HttpPost("api/categories/{id}/delete")]
     public async Task<ActionResult> SoftDelete(
         [FromRoute] int id)
     {

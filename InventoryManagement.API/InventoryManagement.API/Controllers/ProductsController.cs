@@ -112,7 +112,7 @@ public class ProductsController : ControllerBase
         return Ok(productDtoList);
     }
 
-    [HttpGet("api/items/{itemId}/products/{id}", Name = "GetProduct")]
+    [HttpGet("api/items/{itemId}/products/{id}", Name = "Get")]
     public async Task<ActionResult<ProductDto>> Get(
         [FromRoute] int itemId,
         [FromRoute] int id)
@@ -150,8 +150,12 @@ public class ProductsController : ControllerBase
         _inventoryManagementRepository.AddProduct(product);
         await _inventoryManagementRepository.SaveChangesAsync();
 
-        return CreatedAtRoute("GetProduct",
-            (itemId, id: product.Id),
+        return CreatedAtRoute("Get",
+            new
+            {
+                itemId = itemId,
+                id = product.Id
+            },
             _mapper.Map<ProductDto>(product));
     }
 
