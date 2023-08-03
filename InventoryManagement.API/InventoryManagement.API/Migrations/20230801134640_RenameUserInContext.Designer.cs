@@ -3,6 +3,7 @@ using System;
 using InventoryManagement.API.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InventoryManagement.API.Migrations
 {
     [DbContext(typeof(InventoryContext))]
-    partial class InventoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230801134640_RenameUserInContext")]
+    partial class RenameUserInContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,6 +83,9 @@ namespace InventoryManagement.API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("InventoryManagementUserId")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
@@ -91,14 +97,11 @@ namespace InventoryManagement.API.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("character varying(15)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("InventoryManagementUserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ItemId");
 
                     b.ToTable("Products");
                 });
@@ -176,19 +179,19 @@ namespace InventoryManagement.API.Migrations
 
             modelBuilder.Entity("InventoryManagement.API.Models.Entities.Product", b =>
                 {
+                    b.HasOne("InventoryManagement.API.Models.Entities.User", "InventoryManagementUser")
+                        .WithMany()
+                        .HasForeignKey("InventoryManagementUserId");
+
                     b.HasOne("InventoryManagement.API.Models.Entities.Item", "Item")
                         .WithMany("Products")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InventoryManagement.API.Models.Entities.User", "User")
-                        .WithMany("Products")
-                        .HasForeignKey("UserId");
+                    b.Navigation("InventoryManagementUser");
 
                     b.Navigation("Item");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("InventoryManagement.API.Models.Entities.Category", b =>
@@ -197,11 +200,6 @@ namespace InventoryManagement.API.Migrations
                 });
 
             modelBuilder.Entity("InventoryManagement.API.Models.Entities.Item", b =>
-                {
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("InventoryManagement.API.Models.Entities.User", b =>
                 {
                     b.Navigation("Products");
                 });

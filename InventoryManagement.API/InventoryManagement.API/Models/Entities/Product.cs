@@ -16,8 +16,8 @@ public class Product
     public Item Item { get; set; }
     public int ItemId { get; set; }
     
-    public InventoryManagementUser? InventoryManagementUser { get; set; }
-    public string? InventoryManagementUserId { get; set; }
+    public User? User { get; set; }
+    public string? UserId { get; set; }
     
     public bool IsDeleted { get; set; }
 }

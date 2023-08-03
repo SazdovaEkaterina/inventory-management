@@ -3,6 +3,7 @@ using System;
 using InventoryManagement.API.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InventoryManagement.API.Migrations
 {
     [DbContext(typeof(InventoryContext))]
-    partial class InventoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230801135018_RenameUserInProduct")]
+    partial class RenameUserInProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,7 +186,7 @@ namespace InventoryManagement.API.Migrations
                         .IsRequired();
 
                     b.HasOne("InventoryManagement.API.Models.Entities.User", "User")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Item");
@@ -197,11 +200,6 @@ namespace InventoryManagement.API.Migrations
                 });
 
             modelBuilder.Entity("InventoryManagement.API.Models.Entities.Item", b =>
-                {
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("InventoryManagement.API.Models.Entities.User", b =>
                 {
                     b.Navigation("Products");
                 });

@@ -32,14 +32,14 @@ builder.Services.AddDbContext<InventoryContext>(
     )
 );
 
-builder.Services.AddIdentity<InventoryManagementUser, IdentityRole>(options =>
+builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
         options.User.RequireUniqueEmail = true;
     })
     .AddEntityFrameworkStores<InventoryContext>()
     .AddDefaultTokenProviders(); 
 
-//builder.Services.AddIdentityCore<InventoryManagementUser>();
+//builder.Services.AddIdentityCore<User>();
 
 builder.Services.AddScoped<IInventoryManagementRepository, InventoryManagementRepository>();
 

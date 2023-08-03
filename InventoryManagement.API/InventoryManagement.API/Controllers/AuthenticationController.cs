@@ -14,10 +14,10 @@ namespace InventoryManagement.API.Controllers;
 public class AuthenticationController : ControllerBase
 {
     private readonly IConfiguration _configuration;
-    private readonly UserManager<InventoryManagementUser> _userManager;
+    private readonly UserManager<User> _userManager;
 
     public AuthenticationController(IConfiguration configuration,
-        UserManager<InventoryManagementUser> userManager)
+        UserManager<User> userManager)
     {
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -69,7 +69,7 @@ public class AuthenticationController : ControllerBase
             return Conflict();
         }
 
-        var user = new InventoryManagementUser()
+        var user = new User()
         {
             FirstName = model.FirstName,
             LastName = model.LastName,
