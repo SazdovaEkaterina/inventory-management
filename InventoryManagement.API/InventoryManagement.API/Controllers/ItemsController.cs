@@ -25,7 +25,7 @@ public class ItemsController : ControllerBase
                                          throw new ArgumentNullException(nameof(inventoryManagementRepository));
         _mapper = mapper;
     }
-
+    
     [HttpGet("api/items")]
     public async Task<ActionResult<IEnumerable<ItemDto>>> GetAll(
         [FromQuery] string? name,
@@ -70,6 +70,7 @@ public class ItemsController : ControllerBase
         return Ok(itemDto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("api/items/add")]
     public async Task<ActionResult<ItemDto>> Create(
         [FromBody] ItemDto itemDto)
@@ -87,6 +88,7 @@ public class ItemsController : ControllerBase
             _mapper.Map<ItemDto>(item));
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpPut("api/items/{id}/edit")]
     public async Task<ActionResult> Update(
         [FromRoute] int id, 
@@ -105,6 +107,7 @@ public class ItemsController : ControllerBase
         return Ok(_mapper.Map<ItemDto>(item));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPatch("api/items/{id}/partial-edit")]
     public async Task<ActionResult> PartiallyUpdate(
         [FromRoute] int id, 
@@ -138,6 +141,7 @@ public class ItemsController : ControllerBase
         return Ok(_mapper.Map<ItemDto>(item));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("api/items/{id}/delete")]
     public async Task<ActionResult> HardDelete(
         [FromRoute] int id)
@@ -155,6 +159,7 @@ public class ItemsController : ControllerBase
         return NoContent();
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpPost("api/items/{id}/delete")]
     public async Task<ActionResult> SoftDelete(
         [FromRoute] int id)

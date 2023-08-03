@@ -15,12 +15,16 @@ public class AuthenticationController : ControllerBase
 {
     private readonly IConfiguration _configuration;
     private readonly UserManager<User> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    public AuthenticationController(IConfiguration configuration,
-        UserManager<User> userManager)
+    public AuthenticationController(
+        IConfiguration configuration,
+        UserManager<User> userManager, 
+        RoleManager<IdentityRole> roleManager)
     {
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
     }
 
     [HttpPost]
@@ -34,10 +38,16 @@ public class AuthenticationController : ControllerBase
                 Encoding.UTF8.GetBytes(_configuration["Authentication:SecretForKey"]));
             var signingCredentials = new SigningCredentials(
                 securityKey, SecurityAlgorithms.HmacSha256);
-        
+
             var claimsForToken = new List<Claim>();
             claimsForToken.Add(new Claim("first_name", user.FirstName));
             claimsForToken.Add(new Claim("last_name", user.LastName));
+            
+            var userRoles = await _userManager.GetRolesAsync(user);
+            foreach (var role in userRoles)
+            {
+                claimsForToken.Add(new Claim(ClaimTypes.Role, role));
+            }
         
             var jwtSecurityToken = new JwtSecurityToken(
                 _configuration["Authentication:Issuer"],
@@ -81,6 +91,53 @@ public class AuthenticationController : ControllerBase
         if (!createdUser.Succeeded)
         {
             return BadRequest();
+        }
+        
+        if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))  
+            await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));  
+        if (!await _roleManager.RoleExistsAsync(UserRoles.User))  
+            await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));  
+        
+        if (await _roleManager.RoleExistsAsync(UserRoles.User))  
+        {  
+            await _userManager.AddToRoleAsync(user, UserRoles.User);  
+        }
+
+        return Ok();
+    }
+
+    [HttpPost]
+    [Route("register-admin")]
+    public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
+    {
+        var userExists = await _userManager.FindByNameAsync(model.UserName);
+        if (userExists != null)
+        {
+            return Conflict();
+        }
+        
+        var user = new User()
+        {
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            Email = model.Email,
+            UserName = model.UserName
+        };
+        
+        var createdUser = await _userManager.CreateAsync(user, model.Password);
+        if (!createdUser.Succeeded)
+        {
+            return BadRequest();
+        }
+        
+        if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))  
+            await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));  
+        if (!await _roleManager.RoleExistsAsync(UserRoles.User))  
+            await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));  
+  
+        if (await _roleManager.RoleExistsAsync(UserRoles.Admin))  
+        {  
+            await _userManager.AddToRoleAsync(user, UserRoles.Admin);  
         }
 
         return Ok();

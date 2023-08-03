@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using InventoryManagement.API.DbContexts;
+using InventoryManagement.API.Models;
 using InventoryManagement.API.Models.Entities;
 using InventoryManagement.API.Services;
 using Microsoft.AspNetCore.Identity;
@@ -36,7 +37,6 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     {
         options.User.RequireUniqueEmail = true;
     })
-    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<InventoryContext>()
     .AddDefaultTokenProviders(); 
 

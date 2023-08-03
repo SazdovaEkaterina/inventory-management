@@ -64,6 +64,7 @@ public class CategoriesController : ControllerBase
         return Ok(itemDtoList);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("add")]
     public async Task<ActionResult<CategoryDto>> Create(
         [FromBody] CategoryDto categoryDto)
@@ -81,6 +82,7 @@ public class CategoriesController : ControllerBase
             categoryDto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}/edit")]
     public async Task<ActionResult> Update(
         [FromRoute] int id, 
@@ -99,6 +101,7 @@ public class CategoriesController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPatch("{id}/partial-edit")]
     public async Task<ActionResult> PartiallyUpdate(
         [FromRoute] int id, 
@@ -132,6 +135,7 @@ public class CategoriesController : ControllerBase
         return NoContent();
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}/delete")]
     public async Task<ActionResult> HardDelete(
         [FromRoute] int id)
@@ -149,6 +153,7 @@ public class CategoriesController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("{id}/delete")]
     public async Task<ActionResult> SoftDelete(
         [FromRoute] int id)

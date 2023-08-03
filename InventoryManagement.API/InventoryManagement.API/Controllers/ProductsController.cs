@@ -133,6 +133,7 @@ public class ProductsController : ControllerBase
         return Ok(productDto);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("api/items/{itemId}/products/add")]
     public async Task<ActionResult<ProductDto>> Create(
         [FromRoute] int itemId,
@@ -154,6 +155,7 @@ public class ProductsController : ControllerBase
             _mapper.Map<ProductDto>(product));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("api/items/{itemId}/products/{id}/edit")]
     public async Task<ActionResult> Update(
         [FromRoute] int itemId,
@@ -178,6 +180,7 @@ public class ProductsController : ControllerBase
         return Ok(_mapper.Map<ProductDto>(product));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPatch("api/items/{itemId}/products/{id}/partial-edit")]
     public async Task<ActionResult> PartiallyUpdate(
         [FromRoute] int itemId,
@@ -217,6 +220,7 @@ public class ProductsController : ControllerBase
         return Ok(_mapper.Map<ProductDto>(product));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("api/items/{itemId}/products/{id}/delete")]
     public async Task<ActionResult> HardDelete(
         [FromRoute] int itemId,
@@ -240,6 +244,7 @@ public class ProductsController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("api/items/{itemId}/products/{id}/delete")]
     public async Task<ActionResult> SoftDelete(
         [FromRoute] int itemId,
