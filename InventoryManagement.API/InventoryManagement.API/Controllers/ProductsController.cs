@@ -153,7 +153,7 @@ public class ProductsController : ControllerBase
         return CreatedAtRoute("Get",
             new
             {
-                itemId = itemId,
+                itemId,
                 id = product.Id
             },
             _mapper.Map<ProductDto>(product));
