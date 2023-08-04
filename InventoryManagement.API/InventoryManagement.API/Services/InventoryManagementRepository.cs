@@ -1,5 +1,6 @@
 using InventoryManagement.API.DbContexts;
 using InventoryManagement.API.Models.Entities;
+using InventoryManagement.API.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagement.API.Services;

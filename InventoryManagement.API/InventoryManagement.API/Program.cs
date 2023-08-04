@@ -4,6 +4,7 @@ using InventoryManagement.API.DbContexts;
 using InventoryManagement.API.Models;
 using InventoryManagement.API.Models.Entities;
 using InventoryManagement.API.Services;
+using InventoryManagement.API.Services.IServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

@@ -1,6 +1,6 @@
 using InventoryManagement.API.Models.Entities;
 
-namespace InventoryManagement.API.Services;
+namespace InventoryManagement.API.Services.IServices;
 
 public interface IInventoryManagementRepository
 {

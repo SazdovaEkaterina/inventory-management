@@ -3,6 +3,7 @@ using AutoMapper;
 using InventoryManagement.API.Models.Dto;
 using InventoryManagement.API.Models.Entities;
 using InventoryManagement.API.Services;
+using InventoryManagement.API.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
