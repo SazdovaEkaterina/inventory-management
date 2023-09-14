@@ -6,7 +6,7 @@ class Header extends Component{
         return (
             <header>
                 <nav className="navbar navbar-expand-md navbar-light navbar-fixed bg-light">
-                    <a clasName="navbar-brand" href="#">InventoryManagement</a>
+                    <a className="navbar-brand" href="/">InventoryManagement</a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                             aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
@@ -14,10 +14,10 @@ class Header extends Component{
                     <div className="collapse navbar-collapse" id="navbarCollapse">
                         <ul className="navbar-nav mr-auto">
                             <li className="nav-item active">
-                                <a className="nav-link" href="#">Link1</a>
+                                <a className="nav-link" href="/">Link1</a>
                             </li>
                             <li className="nav-item active">
-                                <a className="nav-link" href="#">Link2</a>
+                                <a className="nav-link" href="/">Link2</a>
                             </li>
                         </ul>
                     </div>

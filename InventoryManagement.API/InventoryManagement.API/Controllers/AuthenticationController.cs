@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using InventoryManagement.API.Models;
 using InventoryManagement.API.Models.Entities;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

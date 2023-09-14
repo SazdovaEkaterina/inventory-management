@@ -11,6 +11,17 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// var allowReactAppOrigin = "allowReactAppOrigin";
+//
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy(name: allowReactAppOrigin,
+//         policy =>
+//         {
+//             policy.WithOrigins("http://localhost:3000");
+//         });
+// });
+
 // Add services to the container.
 
 builder.Services.AddControllers()
@@ -80,6 +91,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+//app.UseCors(allowReactAppOrigin);
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .WithOrigins("http://localhost:3000"));
 
 app.UseAuthentication();
 

@@ -1,30 +1,42 @@
-import logo from '../../logo.svg';
 import './App.css';
 import React, {Component} from "react";
+import InventoryManagementService from '../../repository/InventoryManagementRepository';
 import Header from '../Header/Header';
+import Items from '../Items/ItemList/Items'
 
 class App extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      items: []
+    }
+  }
 
   render() {
     return (
       <div className="App">
         <Header/>
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Class Component
-          </a>
-        </header>
+        <main>
+          <div className="container">
+            <Items items={this.state.items}/>
+          </div>
+        </main>
       </div>
     );
+  }
+
+  componentDidMount(){
+    this.loadItems();
+  }
+
+  loadItems = () => {
+    InventoryManagementService.fetchItems()
+      .then((data) => {
+        this.setState({
+          items: data.data
+        })
+      })
   }
 }
 

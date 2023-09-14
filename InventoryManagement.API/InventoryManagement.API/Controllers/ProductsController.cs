@@ -5,6 +5,7 @@ using InventoryManagement.API.Models.Entities;
 using InventoryManagement.API.Services;
 using InventoryManagement.API.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace InventoryManagement.API.Controllers;
 
 [ApiController]
-[Authorize(AuthenticationSchemes = "Bearer")]
+//[Authorize(AuthenticationSchemes = "Bearer")]
 public class ProductsController : ControllerBase
 {
     private readonly IInventoryManagementRepository _inventoryManagementRepository;
